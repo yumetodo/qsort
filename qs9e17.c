@@ -19,8 +19,7 @@ static void die(const char *s) {fprintf(stderr, "++++ %s ++++\n", s); printf("++
 static void die(const char *s) { (void)s; }
 #endif
 
-static size_t g_QS_MID1 = 140, g_QS_MID2 = 900;
-size_t g_QS_MVR = 116;  // 関数の外で設定することも可
+size_t g_QS_MID1 = 140, g_QS_MID2 = 900, g_QS_MID3 = 0;//g_QS_MID3 is not used.
 
 typedef struct { char *LLss, *RRss; } stack_node;   /*L,Rを積むスタックの構造体*/
 #define PUSH(llss,rrss) {top->LLss = (llss); top->RRss = (rrss); ++top;}    /*L,Rを積む*/

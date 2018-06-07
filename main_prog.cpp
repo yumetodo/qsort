@@ -2,9 +2,13 @@
 #ifdef USE_STDLIB_QSORT
 #include <stdlib.h>
 #define qsort_selected qsort
-#else
+size_t g_QS_MID1, g_QS_MID2, g_QS_MID3;
+#elif defined(USE_QS9E17)
 #include "qs9e17.h"
 #define qsort_selected qsort9e17
+#elif defined(USE_QS10A5)
+#include "qs10a5.h"
+#define qsort_selected qsort10a5
 #endif
 #include <time.h>
 #include "random_device.hpp"
@@ -39,7 +43,6 @@ std::mt19937& random_engine() {
 typedef struct { int key; int data; } el_t;
 
 unsigned int cmp_cnt, ass_cnt;
-int g_QS_MID1, g_QS_MID2, g_QS_MID3;
 
 int strcmp0(const char *s1, const char *s2)
 {
@@ -136,11 +139,11 @@ int main(int argc, char **argv) {
 
 	fprintf(stderr, "\n%-8s d=%d e=%d s=%d %dM R%d ",
 		argv[0] + 2, div_val, arr_max, rec_siz, arr_max*rec_siz / 1000000, itarate);
-	fprintf(stderr, "%c=%d:%d:%d:%d: ", (sizeof(char*) == 8 ? 'M' : 'm'), g_QS_MID1, g_QS_MID2, g_QS_MID3, cmp_loop);
+	fprintf(stderr, "%c=%zu:%zu:%zu:%d: ", (sizeof(char*) == 8 ? 'M' : 'm'), g_QS_MID1, g_QS_MID2, g_QS_MID3, cmp_loop);
 
 	printf("%-9s d=%d e=%d s=%d %d R%d ",
 		argv[0] + 2, div_val, arr_max, rec_siz, arr_max*rec_siz / 1000000, itarate);
-	printf("%c%3d:%3d:%d:%d:", (sizeof(char*) == 8 ? 'M' : 'm'), g_QS_MID1, g_QS_MID2, g_QS_MID3, cmp_loop);
+	printf("%c%3zu:%3zu:%zu:%d:", (sizeof(char*) == 8 ? 'M' : 'm'), g_QS_MID1, g_QS_MID2, g_QS_MID3, cmp_loop);
 	fflush(stdout);
 
 	if (rec_siz < 4 || 20000 < rec_siz) die("本プログラムでは「要素のバイトサイズは４以上&２万以下」");
