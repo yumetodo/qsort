@@ -12,6 +12,7 @@ void mmswap(char *a, char *b);
 void mmrot3( char *a, char *b, char *c );
 void mmswapblock( char *a, char *b, size_t size );
 void mmprepare( void *base, size_t size );
+void mmmove(char *a, const char *b);
 
 #ifdef __cplusplus
 }
