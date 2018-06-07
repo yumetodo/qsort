@@ -9,6 +9,17 @@
         "*.tcc": "cpp",
         "*.natvis": "xml",
         ".lesshintrc": "json",
-        ".babelrc": "json5"
+        ".babelrc": "json5",
+        "iterator": "cpp",
+        "memory": "cpp",
+        "random": "cpp",
+        "xutility": "cpp",
+        "array": "cpp",
+        "initializer_list": "cpp",
+        "list": "cpp",
+        "type_traits": "cpp",
+        "vector": "cpp",
+        "xhash": "cpp",
+        "xstring": "cpp"
     }
 }
