@@ -1,0 +1,14 @@
+{
+    "files.associations": {
+        "*.gs": "javascript",
+        "*.mcmeta": "json",
+        "*.props": "xml",
+        ".mdlrc": "yaml",
+        "*.vstemplate": "xml",
+        "*.geojson": "json",
+        "*.tcc": "cpp",
+        "*.natvis": "xml",
+        ".lesshintrc": "json",
+        ".babelrc": "json5"
+    }
+}
