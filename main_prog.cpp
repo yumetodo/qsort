@@ -129,12 +129,12 @@ int main(int argc, char **argv) {
 	if (argc != 9) die("Usage: main.exe div_val arr_max rec_siz itarate MID1 MID2 MID3 cmp");
 
 	div_val = atoi(argv[1]);       /*テストデータの種類を指定する random()%div_val等*/
-	arr_max = atoi(argv[2]);       /*要素の個数*/
-	rec_siz = atoi(argv[3]);       /*要素の大きさ*/
+	arr_max = atoi(argv[2]);       /*要素の個数(要素数)*/
+	rec_siz = atoi(argv[3]);       /*要素の大きさ(要素サイズ)*/
 	itarate = atoi(argv[4]);       /*繰り返し回数*/
 	g_QS_MID1 = atoi(argv[5]);     /* n がこれ以下で３点処理を行う qs9の既定値140*/
 	g_QS_MID2 = atoi(argv[6]);     /* n がこれ以下で９点処理を行う qs9の既定値900*/
-	g_QS_MID3 = atoi(argv[7]);     /* 使用しない */
+	g_QS_MID3 = atoi(argv[7]);     /* size がこれ以上=のときに間接ソートを追加 qs10の既定値400*/
 	cmp_loop = atoi(argv[8]);     /*比較関数の重たさを調整する*/
 
 	fprintf(stderr, "\n%-8s d=%d e=%d s=%d %dM R%d ",
@@ -143,7 +143,7 @@ int main(int argc, char **argv) {
 
 	printf("%-9s d=%d e=%d s=%d %d R%d ",
 		argv[0] + 2, div_val, arr_max, rec_siz, arr_max*rec_siz / 1000000, itarate);
-	printf("%c%3zu:%3zu:%zu:%d:", (sizeof(char*) == 8 ? 'M' : 'm'), g_QS_MID1, g_QS_MID2, g_QS_MID3, cmp_loop);
+	printf("%c%03zu:%03zu:%03zu:%d:", (sizeof(char*) == 8 ? 'M' : 'm'), g_QS_MID1, g_QS_MID2, g_QS_MID3, cmp_loop);
 	fflush(stdout);
 
 	if (rec_siz < 4 || 20000 < rec_siz) die("本プログラムでは「要素のバイトサイズは４以上&２万以下」");

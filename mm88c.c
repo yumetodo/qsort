@@ -1,4 +1,4 @@
-/***************************************************/
+﻿/***************************************************/
 /*                                                 */
 /*          mm88   (配列の要素のスワップ関数)      */
 /*                                                 */
@@ -25,9 +25,9 @@ unsigned int ass_cnt; /*代入回数を計測しないときは、削除可能*/
 #define B4 ((int*)b)
 #define C4 ((int*)c)
 
-#define  SW8(i) {long long int v; v = A8[i]; A8[i] = B8[i]; B8[i] = v;} 
-#define  SW4(i) {          int v; v = A4[i]; A4[i] = B4[i]; B4[i] = v;} 
-#define  SW1(i) {         char v; v =  a[i];  a[i] =  b[i];  b[i] = v;} 
+#define  SW8(i) {long long int v; v = A8[i]; A8[i] = B8[i]; B8[i] = v;}
+#define  SW4(i) {          int v; v = A4[i]; A4[i] = B4[i]; B4[i] = v;}
+#define  SW1(i) {         char v; v =  a[i];  a[i] =  b[i];  b[i] = v;}
 #define  RT8(i) {long long int v; v = A8[i]; A8[i] = B8[i]; B8[i] = C8[i]; C8[i] = v;}
 #define  RT4(i) {          int v; v = A4[i]; A4[i] = B4[i]; B4[i] = C4[i]; C4[i] = v;}
 #define  RT1(i) {         char v; v =  a[i];  a[i] =  b[i];  b[i] =  c[i];  c[i] = v;}
@@ -47,7 +47,7 @@ unsigned int ass_cnt; /*代入回数を計測しないときは、削除可能*/
      case 2*WS: MOV(1)  \
      case 1*WS: MOV(0)  \
    } \
-} 
+}
 
 #define INT64_OK  (sizeof(char*)==8)
 
@@ -101,7 +101,7 @@ static void mmswap1( char *a, char *b ) //if (a==b) return;  a と b は異な�
 #define EXD8(MOV,WS) { \
      char *e = a + high; \
      do {MOV(0) MOV(1) MOV(2) MOV(3) MOV(4) MOV(5) MOV(6) MOV(7)  b += 8*WS; a += 8*WS; \
-     }while (a < e); } 
+     }while (a < e); }
 
 static void mmswap801(char *a, char *b) {SW8(0)}
 static void mmswap802(char *a, char *b) {SW8(0) SW8(1)}
@@ -128,7 +128,7 @@ static void mmswap404(char *a, char *b) {SW4(0) SW4(1) SW4(2) SW4(3)}
 static void mmswap405(char *a, char *b) {SW4(0) SW4(1) SW4(2) SW4(3) SW4(4)}
 static void mmswap406(char *a, char *b) {SW4(0) SW4(1) SW4(2) SW4(3) SW4(4) SW4(5)}
 static void mmswap407(char *a, char *b) {SW4(0) SW4(1) SW4(2) SW4(3) SW4(4) SW4(5) SW4(6)}
-           
+
 static void mmswap410(char *a, char *b) {EXD8(SW4,4)}
 static void mmswap411(char *a, char *b) {EXD8(SW4,4) SW4(0)}
 static void mmswap412(char *a, char *b) {EXD8(SW4,4) SW4(0) SW4(1)}
@@ -265,4 +265,18 @@ void mmprepare( void *base, size_t size )
    low  = (size & ( 8-1));
    mmswapi=mmswap1;
  }
+}
+
+//mmmoveは間接ソートの３箇所でのみ使用。memcpy関数が遅いときに使用する。
+#define  MV8(i) {A8[i] = B8[i];}
+#define  MV4(i) {A4[i] = B4[i];}
+#define  MV1(i) { a[i] =  b[i];}
+void mmmove(char *a, const char *b)
+{
+#ifdef DEBUG
+	ass_cnt += 1;
+#endif
+	if (mmkind == 8 && INT64_OK) HIGHLOW(high, low, MV8, 8, 1 == 1)
+	else if (mmkind == 4) HIGHLOW(high, low, MV4, 4, 1 == 1)
+	else   /*mmkind == 1*/            HIGHLOW(high, low, MV1, 1, 1 == 1)
 }
