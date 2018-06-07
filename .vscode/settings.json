@@ -20,6 +20,8 @@
         "type_traits": "cpp",
         "vector": "cpp",
         "xhash": "cpp",
-        "xstring": "cpp"
+        "xstring": "cpp",
+        "functional": "cpp",
+        "stdio.h": "c"
     }
 }

@@ -1,12 +1,14 @@
-﻿/***************************************************/
-/*                                                 */
-/*          qs10   (Quick sort function)           */
-/*                                                 */
-/* by 河村 知行 (kawamura tomoyuki)    2018.6.1    */
-/*  〒745-0845 山口県周南市河東町3-2 （株）曽呂利  */
-/*             t-kawa@crux.ocn.ne.jp               */
-/***************************************************/
-
+﻿/*=============================================================================
+  Copyright (C) 2017-2018 河村　知行 <t-kawa@crux.ocn.ne.jp>
+  Copyright (C) 2018 yumetodo <yume-wikijp@live.jp>
+  Distributed under the Boost Software License, Version 1.0.
+  (See https://www.boost.org/LICENSE_1_0.txt)
+=============================================================================*/
+/**
+ * @file qs10a5.c
+ * @brief Quick sort function
+ * @date 2018.6.1
+ */
 #include <stdio.h>
 #include "qs10a5.h"
 #include "mm88.h"

@@ -1,4 +1,8 @@
-﻿#pragma once
+﻿/*=============================================================================
+  Copyright (C) cpprefjp https://cpprefjp.github.io/reference/random/random_device.html
+  CC 3.0 BY (See https://creativecommons.org/licenses/by/3.0/deed.ja)
+=============================================================================*/
+#pragma once
 
 #include <random>
 
