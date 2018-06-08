@@ -2,9 +2,6 @@
 
 Z=10 # 終了までに10～30分程度かかります。
 
-# cd Debug # use debug build
-cd Release # use release build
-
  K02=`expr   2000 \* $Z / 10`
  K04=`expr   4000 \* $Z / 10`
  K10=`expr  10000 \* $Z / 10`

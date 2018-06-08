@@ -260,4 +260,4 @@ paket-files/
 __pycache__/
 *.pyc
 
-!bin/benchmark.sh
+build/*
