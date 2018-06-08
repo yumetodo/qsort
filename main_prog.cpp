@@ -22,6 +22,9 @@ size_t g_QS_MID1, g_QS_MID2, g_QS_MID3;
 #include <array>
 #include <functional>
 #include <algorithm>
+#include <iostream>
+#include <iomanip>
+
 using seed_v_t = std::array<cpprefjp::random_device::result_type, sizeof(std::mt19937) / sizeof(cpprefjp::random_device::result_type)>;
 seed_v_t create_seed_v()
 {
@@ -105,14 +108,14 @@ void do_qsort(int do_qs) {
 				if (do_qs == 0) continue;
 				puts("");
 				{
-					for (int h = 0; h < arr_max && h < 40; h++) printf(" %d", KEY(h));
-					puts(" arr_max error");
+					for (int h = 0; h < arr_max && h < 40; h++) std::cout << ' ' << KEY(h);
+					std::cout << " arr_max error" << std::endl;
 				}
 				{
-					for (int h = 0; h <= i && h < 40; h++) printf(" .");
-					puts("← error is here");
+					for (int h = 0; h <= i && h < 40; h++) std::cout << " .";
+					std::cout << "← error is here" << std::endl;
 				}
-				printf("  counter=%d   error i=%d  ", counter, i);
+				std::cout << "  counter=" << counter << "   error i=" << i << std::flush;
 				die("not sorted  do_qsort(1)");
 			}
 			else {
@@ -143,14 +146,20 @@ int main(int argc, char **argv) {
 	g_QS_MID3 = atoi(argv[7]);     /* size がこれ以上=のときに間接ソートを追加 qs10の既定値400*/
 	cmp_loop = atoi(argv[8]);     /*比較関数の重たさを調整する*/
 
-	fprintf(stderr, "\n%-8s d=%d e=%d s=%d %dM R%d ",
-		argv[0] + 2, div_val, arr_max, rec_siz, arr_max*rec_siz / 1000000, itarate);
-	fprintf(stderr, "%c=%zu:%zu:%zu:%d: ", (sizeof(char*) == 8 ? 'M' : 'm'), g_QS_MID1, g_QS_MID2, g_QS_MID3, cmp_loop);
+	std::cerr
+		<< std::endl << std::setw(8) << argv[0] + 2
+		<< " d=" << div_val << " e=" << arr_max << " s=" << rec_siz << ' ' << arr_max*rec_siz / 1000000 << "M R" << itarate
+		<< (sizeof(char*) == 8 ? 'M' : 'm') << '=' << g_QS_MID1 << ':' << g_QS_MID2 << ':' << g_QS_MID3
+		<< ':' << cmp_loop << ": " << std::flush;
 
-	printf("%-9s d=%d e=%d s=%d %d R%d ",
-		argv[0] + 2, div_val, arr_max, rec_siz, arr_max*rec_siz / 1000000, itarate);
-	printf("%c%03zu:%03zu:%03zu:%d:", (sizeof(char*) == 8 ? 'M' : 'm'), g_QS_MID1, g_QS_MID2, g_QS_MID3, cmp_loop);
-	fflush(stdout);
+	std::cout
+		<< std::setw(9) << argv[0] + 2
+		<< " d=" << div_val << " e=" << arr_max << " s=" << rec_siz << ' ' << arr_max*rec_siz / 1000000 << " R" << itarate
+		<< (sizeof(char*) == 8 ? 'M' : 'm')
+		<< std::setw(3) << std::setfill('0') << g_QS_MID1 << ':'
+		<< std::setw(3) << std::setfill('0') << g_QS_MID2 << ':'
+		<< std::setw(3) << std::setfill('0') << g_QS_MID3 << ':'
+		<< cmp_loop << ':' << std::flush;
 
 	if (rec_siz < 4 || 20000 < rec_siz) die("本プログラムでは「要素のバイトサイズは４以上&２万以下」");
 	if (rec_siz % 4) die("本プログラムでは「要素のバイトサイズは４の倍数」を仮定");
