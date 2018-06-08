@@ -8,7 +8,6 @@
 
 ## Todo
 
-- CMakeできるようにする(現在Visual Studioのみ)
 - unixの`time`コマンドに依存しない計測方法
 
 ## How to build and run benchmark
