@@ -121,11 +121,11 @@ void do_qsort(int do_qs) {
 			else {
 				if (do_qs == 0) continue;  // do_qsort(1) do_qsort(0) の時間をできるだけ合わせるための処理
 			}
-			if (rec_siz >= 8) {
-				for (int j = 0; j < arr_max; j++) chk[j] = 0;
-				for (int j = 0; j < arr_max; j++) chk[DATA(j)] = 123;
-				for (int j = 0; j < arr_max; j++) if (chk[j] != 123) die("chk err");
-			}
+		}
+		if (rec_siz >= 8) {
+			for (int j = 0; j < arr_max; j++) chk[j] = 0;
+			for (int j = 0; j < arr_max; j++) chk[DATA(j)] = 123;
+			for (int j = 0; j < arr_max; j++) if (chk[j] != 123) die("chk err");
 		}
 	}
 }
