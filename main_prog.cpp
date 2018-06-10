@@ -17,31 +17,18 @@ size_t g_QS_MID1, g_QS_MID2, g_QS_MID3;
 #define qsort_selected qsort10a5
 #endif
 #include <time.h>
-#include "random_device.hpp"
-
+#include <random>
 #include <array>
 #include <functional>
 #include <algorithm>
 #include <iostream>
 #include <iomanip>
 
-using seed_v_t = std::array<cpprefjp::random_device::result_type, sizeof(std::mt19937) / sizeof(cpprefjp::random_device::result_type)>;
-seed_v_t create_seed_v()
-{
-	cpprefjp::random_device rnd;
-	seed_v_t sed_v;
-	std::generate(sed_v.begin(), sed_v.end(), std::ref(rnd));
-	return sed_v;
-}
+constexpr char32_t seed[] = U"glibc newlib より速いクイックソート(qs9 qs10)、 世界最速をめざしてqsortの新しいアルゴリズム qs9 を開発しましたその結果、ソート対象によっては間接ソートを取り入れた方が高速なことが判りました。今回、間接ソートを取り入れた qs10 を開発しました。お願い現在、 標準qsort　qs9　qs10　を比較するベンチマークテストを行っております。";
 std::mt19937 create_random_engine()
 {
-	const auto sed_v = create_seed_v();
-	std::seed_seq seq(sed_v.begin(), sed_v.end());
+	std::seed_seq seq(std::begin(seed), std::end(seed));
 	return std::mt19937(seq);
-}
-std::mt19937& random_engine() {
-	static thread_local std::mt19937 engine = create_random_engine();
-	return engine;
 }
 
 [[noreturn]] void die(const char *s)
@@ -81,18 +68,19 @@ auto& DATA(int i)
 	return ((el_t*)(vec + i * rec_siz))->data;
 }
 void do_qsort(int do_qs) {
+	std::mt19937 engine = create_random_engine();
 	for (counter = 0; counter<itarate; counter++) {
 		/*データを用意する*/
 		if (div_val == 0) for (int i = 0; i < arr_max; i++) KEY(i) = 5;         /*一定*/
 		if (div_val == -1) for (int i = 0; i < arr_max; i++) KEY(i) = i + 1;       /*昇順*/
 		if (div_val == -2) for (int i = 0; i < arr_max; i++) KEY(i) = arr_max - i; /*降順*/
-		if (div_val == 1) for (int i = 0; i < arr_max; i++) KEY(i) = std::uniform_int_distribution<>(0, 2147483647)(random_engine());  /*乱数*/
-		if (div_val >= 2) for (int i = 0; i < arr_max; i++) KEY(i) = std::uniform_int_distribution<>(0, div_val - 1)(random_engine());
+		if (div_val == 1) for (int i = 0; i < arr_max; i++) KEY(i) = std::uniform_int_distribution<>(0, 2147483647)(engine);  /*乱数*/
+		if (div_val >= 2) for (int i = 0; i < arr_max; i++) KEY(i) = std::uniform_int_distribution<>(0, div_val - 1)(engine);
 		if (div_val == -3) {
 			for (int i = 0; i < arr_max; i++) KEY(i) = i;       /*同値キーがない乱数　入れ替えで*/
 
 			for (int i = 0; i < arr_max; i++) {
-				const int x = std::uniform_int_distribution<>(0, arr_max - 1)(random_engine());
+				const int x = std::uniform_int_distribution<>(0, arr_max - 1)(engine);
 				std::swap(KEY(i), KEY(x));
 			}
 		}
