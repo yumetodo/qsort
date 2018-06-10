@@ -19,7 +19,7 @@ Require CMake to build.
 ```bash
 $ mkdir build
 $ cd build
-$ cmake -DCMAKE_INSTALL_PREFIX=../bin ..
+$ cmake -DCMAKE_INSTALL_PREFIX=../bin -DCMAKE_BUILD_TYPE=Release ..
 $ make install
 $ cd ../bin
 $ ./benchmark.sh
@@ -48,7 +48,7 @@ Some unix-like shell(ex. git-bash, msys2 bash, etc...) is required to benchmark.
 ```bash
 $ mkdir build
 $ cd build
-$ cmake -DCMAKE_INSTALL_PREFIX=../bin -G "MSYS Makefiles" ..
+$ cmake -DCMAKE_INSTALL_PREFIX=../bin -G "MSYS Makefiles" -DCMAKE_BUILD_TYPE=Release ..
 $ make install
 $ cd ../bin
 $ ./benchmark.sh
