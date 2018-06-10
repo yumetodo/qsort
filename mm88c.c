@@ -59,9 +59,9 @@ void mmswapblock( char *a, char *b, size_t size )
 #ifdef DEBUG
  ass_cnt += (size/mmsize)*2;
 #endif
- if      (mmkind == 8 && INT64_OK) HIGHLOW((size&(-64)),(size&(64-1)),SW8,8,1==1)
- else if (mmkind == 4            ) HIGHLOW((size&(-32)),(size&(32-1)),SW4,4,1==1)
- else   /*mmkind == 1*/            HIGHLOW((size&( -8)),(size&( 8-1)),SW1,1,1==1)
+ if      (mmkind == 8 && INT64_OK) HIGHLOW((size&(-64)),(size&(64-1)),SW8,8,(void)a)
+ else if (mmkind == 4            ) HIGHLOW((size&(-32)),(size&(32-1)),SW4,4,(void)a)
+ else   /*mmkind == 1*/            HIGHLOW((size&( -8)),(size&( 8-1)),SW1,1,(void)a)
 }
 
 void mmrot3( char *a, char *b, char *c )
@@ -98,7 +98,7 @@ void mmswap(char *a, char *b) {
 
 static void mmswap1( char *a, char *b ) //if (a==b) return;  a と b は異なっていること
 {
- HIGHLOW(high,low,SW1,1,1==1)
+ HIGHLOW(high,low,SW1,1,(void)a)
 }
 
 #define EXD8(MOV,WS) { \
@@ -279,7 +279,7 @@ void mmmove(char *a, const char *b)
 #ifdef DEBUG
 	ass_cnt += 1;
 #endif
-	if (mmkind == 8 && INT64_OK) HIGHLOW(high, low, MV8, 8, 1 == 1)
-	else if (mmkind == 4) HIGHLOW(high, low, MV4, 4, 1 == 1)
-	else   /*mmkind == 1*/            HIGHLOW(high, low, MV1, 1, 1 == 1)
+	if (mmkind == 8 && INT64_OK) HIGHLOW(high, low, MV8, 8, (void)a)
+	else if (mmkind == 4) HIGHLOW(high, low, MV4, 4, (void)a)
+	else   /*mmkind == 1*/            HIGHLOW(high, low, MV1, 1, (void)a)
 }
