@@ -22,14 +22,12 @@ $ cd build
 $ cmake -DCMAKE_INSTALL_PREFIX=../bin -DCMAKE_BUILD_TYPE=Release ..
 $ make install
 $ cd ../bin
-$ ./benchmark.sh
+$ ./qsort_benchmark
 ```
 
 ### Windows
 
 #### Visual Studio
-
-Some unix-like shell(ex. git-bash, msys2 bash, etc...) is required to benchmark.
 
 1. Start `cmake-gui.exe`
 2. Specify source code path and build dir path
@@ -39,9 +37,9 @@ Some unix-like shell(ex. git-bash, msys2 bash, etc...) is required to benchmark.
 6. Build
 7. Open Project
 8. In Solution Explorer, right-click `INSTALL` and select build
-9. start some unix-like shell
+9. start some shell(`cmd.exe`, `powershell.exe`, etc...)
 10. `cd <some directory path>`
-11. `./benchmark.sh`
+11. `qsort_benchmark.exe`
 
 ### msys2
 
@@ -51,7 +49,7 @@ $ cd build
 $ cmake -DCMAKE_INSTALL_PREFIX=../bin -G "MSYS Makefiles" -DCMAKE_BUILD_TYPE=Release ..
 $ make install
 $ cd ../bin
-$ ./benchmark.sh
+$ ./qsort_benchmark.exe
 ```
 
 ## 原作者情報
