@@ -6,10 +6,6 @@
 
 [qsort(qs9 qs10)](http://ww51.tiki.ne.jp/~srr-cake/qsort/qs10/index.html)
 
-## Todo
-
-- unixの`time`コマンドに依存しない計測方法
-
 ## How to build and run benchmark
 
 Require CMake to build.
