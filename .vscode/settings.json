@@ -54,6 +54,10 @@
         "xmemory": "cpp",
         "xmemory0": "cpp",
         "xstddef": "cpp",
-        "xtr1common": "cpp"
+        "xtr1common": "cpp",
+        "qs10a5_impl.h": "c",
+        "mm88.h": "c",
+        "global_variable.h": "c",
+        "die.h": "c"
     }
 }
