@@ -4,7 +4,30 @@ set(CMAKE_CXX_STANDARD 14) # C++14...
 set(CMAKE_CXX_STANDARD_REQUIRED ON) #...is required...
 set(CMAKE_CXX_EXTENSIONS OFF) #...without compiler extensions like gnu++11
 
+#
+# Set our project name
+#
 project(qsort_benchmark)
+
+#
+# Source files
+#
+set(
+    SRCS
+    "./main_prog.cpp"
+    "./target_data.cpp"
+    "./global_variable.c"
+    "./mm88c.c"
+    "./qs10a5.c"
+    "./qs10a5m.c"
+    "./qs9e17.c"
+    "./die.c"
+)
+
+#
+# find thread library
+#
+find_package(Threads REQUIRED)
 
 #
 # Update compiler waring flags
@@ -21,18 +44,17 @@ elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-long-long -pedantic")
 endif()
 
-set(
-    SRCS
-    "./main_prog.cpp"
-    "./target_data.cpp"
-    "./global_variable.c"
-    "./mm88c.c"
-    "./qs10a5.c"
-    "./qs10a5m.c"
-    "./qs9e17.c"
-    "./die.c"
-)
-
+#
+# Compile
+#
 add_executable(qsort_benchmark ${SRCS})
 
+#
+# Link
+#
+target_link_libraries(qsort_benchmark Threads::Threads)
+
+#
+# Install
+#
 install(TARGETS qsort_benchmark RUNTIME DESTINATION ".")
