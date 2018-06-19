@@ -13,6 +13,13 @@ extern "C" {
 #endif
 
 extern size_t g_QS_MVR;
+#if defined(DEBUG) || !defined(NDEBUG)
+#	ifndef DEBUG
+#		define DEBUG 1
+#	endif
+void init_ass_cnt();
+size_t get_ass_cnt();
+#endif
 
 void mmswap(char *a, char *b);
 void mmrot3( char *a, char *b, char *c );

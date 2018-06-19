@@ -10,16 +10,19 @@
  * @date 2017.11.30
  */
 #include "mm88.h"
+#include "die.h"
 #include <stdbool.h>
 
 /*８バイト整数(long long int)を使用して高速化  繰り返しは8回(64byte)分展開する*/
 size_t g_QS_MVR = 116;
+#ifdef DEBUG
+static size_t ass_cnt; /*代入回数を計測しないときは、削除可能*/
+void init_ass_cnt() { ass_cnt = 0; }
+size_t get_ass_cnt() { return ass_cnt; }
+#endif
 
 static size_t mmkind, mmsize, high, low, high32_4;
 static bool mmquick;
-#ifdef DEBUG
-unsigned int ass_cnt; /*代入回数を計測しないときは、削除可能*/
-#endif
 
 #define A8 ((long long int*)a)
 #define B8 ((long long int*)b)
@@ -180,8 +183,15 @@ static void mmswap4L28(char *a, char *b) MMswapL(SW8(0) SW8(1) SW8(2) SW4(6), SW
 void mmprepare( void *base, size_t size )
 {
 #ifdef DEBUG
+#if defined(_MSC_VER) && !defined(__c2__)
+#pragma warning(push)
+#pragma warning(disable: 4127)
+#endif
  if (sizeof(          int) != 4) die("sizeof(          int) != 4"); //cygwin64はsizeof(long int)==8
  if (sizeof(long long int) != 8) die("sizeof(long long int) != 8");
+#if defined(_MSC_VER) && !defined(__c2__)
+#pragma warning(pop)
+#endif
  if (size <= 0) die("mmsize <= 0");
 #endif
  if      ( (ENINT(base) & (8-1)) == 0  &&  (size & (8-1)) == 0 && INT64_OK) mmkind = 8;
