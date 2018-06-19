@@ -10,6 +10,7 @@ Distributed under the Boost Software License, Version 1.0.
 #include <vector>
 #include <string>
 #include <numeric>
+#include <algorithm>
 #include <random>
 #include <deque>
 
