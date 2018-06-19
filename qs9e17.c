@@ -10,18 +10,12 @@
  * @date 2018.2.22
  */
 #include <stdio.h>
+#include <stdlib.h>
 #include "mm88.h"
+#include "die.h"
+#include "global_variable.h"
 
 //typedef long unsigned int size_t;
-void exit(int);
-
-#ifdef DEBUG
-static void die(const char *s) {fprintf(stderr, "++++ %s ++++\n", s); printf("++++ %s ++++ \n", s); exit(1);}
-#else
-static void die(const char *s) { (void)s; }
-#endif
-
-size_t g_QS_MID1 = 140, g_QS_MID2 = 900, g_QS_MID3 = 0;//g_QS_MID3 is not used.
 
 typedef struct { char *LLss, *RRss; } stack_node;   /*L,Rを積むスタックの構造体*/
 #define PUSH(llss,rrss) {top->LLss = (llss); top->RRss = (rrss); ++top;}    /*L,Rを積む*/
