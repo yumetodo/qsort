@@ -6,11 +6,12 @@
 #include <future>
 #include <iomanip>
 #include <numeric>
+#include <algorithm>
 #include <cmath>
 #include "std_future.hpp"
 #include "mm88.h"
 template<typename T>
-struct analyzer {
+struct analyzer_c {
 	using value_type = T;
 	std::size_t itarate;
 	double average;
@@ -57,12 +58,12 @@ private:
 		return{ *it_minmax.first, *it_minmax.second };
 	}
 public:
-	analyzer() = default;
-	analyzer(const analyzer&) = default;
-	analyzer(analyzer&&) = default;
-	analyzer& operator=(const analyzer&) = default;
-	analyzer& operator=(analyzer&&) = default;
-	analyzer(
+	analyzer_c() = default;
+	analyzer_c(const analyzer_c&) = default;
+	analyzer_c(analyzer_c&&) = default;
+	analyzer_c& operator=(const analyzer_c&) = default;
+	analyzer_c& operator=(analyzer_c&&) = default;
+	analyzer_c(
 		const std::deque<value_type>& logbuf, const char* qsort_func_name, int div_val, size_t arr_max, size_t rec_siz, size_t cmp_cnt
 #ifdef DEBUG
 		, size_t ass_cnt
@@ -83,11 +84,11 @@ public:
 	}
 };
 template<typename T, std::size_t N>
-void print_analyzed_data_array(std::ostream& os, std::array<analyzer<T>, N>& arr)
+void print_analyzed_data_array(std::ostream& os, std::array<analyzer_c<T>, N>& arr)
 {
 	if (arr.empty()) throw std::invalid_argument("arr doesn't contain element");
-	analyzer<T>& arr_front = arr.front();
-	if (std::any_of(arr.begin() + 1, arr.end(), [&arr_front](const analyzer<T>& analyzed) {
+	analyzer_c<T>& arr_front = arr.front();
+	if (std::any_of(arr.begin() + 1, arr.end(), [&arr_front](const analyzer_c<T>& analyzed) {
 		return arr_front.div_val != analyzed.div_val || arr_front.arr_max != analyzed.arr_max || arr_front.rec_siz != analyzed.rec_siz;
 	})) {
 		throw std::invalid_argument("div_val, arr_max or rec_siz is not equal.");
@@ -98,33 +99,33 @@ void print_analyzed_data_array(std::ostream& os, std::array<analyzer<T>, N>& arr
 	os
 		<< "div_val=" << arr_front.div_val << ":arr_max=" << arr_front.arr_max << ":rec_siz=" << arr_front.rec_siz << endl
 		<< endl << "|       |";
-	for (analyzer<T>& d : arr) os << d.qsort_func_name << '|';
+	for (analyzer_c<T>& d : arr) os << d.qsort_func_name << '|';
 	os << endl << "|-------|";
 	for (size_t i = 0; i < N; ++i) os << "--|";
 	os << endl << "|iterate|";
-	for (analyzer<T>& d : arr) os << d.itarate << '|';
+	for (analyzer_c<T>& d : arr) os << d.itarate << '|';
 	os << endl << "|cmp_avg|";
-	for (analyzer<T>& d : arr) os << d.cmp_cnt / d.itarate << '|';
+	for (analyzer_c<T>& d : arr) os << d.cmp_cnt / d.itarate << '|';
 #ifdef DEBUG
 	os << endl << "|ass_cnt|";
-	for (analyzer<T>& d : arr) os << d.ass_cnt / d.itarate << '|';
+	for (analyzer_c<T>& d : arr) os << d.ass_cnt / d.itarate << '|';
 #endif
 	os << endl << "|max|";
-	for (analyzer<T>& d : arr) os << d.max << '|';
+	for (analyzer_c<T>& d : arr) os << d.max << '|';
 	os << endl << "|min|";
-	for (analyzer<T>& d : arr) os << d.min << '|';
+	for (analyzer_c<T>& d : arr) os << d.min << '|';
 	os << endl << "|avg|";
-	for (analyzer<T>& d : arr) os << fixed << setprecision(7) << d.average << '|';
+	for (analyzer_c<T>& d : arr) os << fixed << setprecision(7) << d.average << '|';
 	os << endl << "|stdev|";
-	for (analyzer<T>& d : arr) os << fixed << setprecision(7) << d.stdev << '|';
+	for (analyzer_c<T>& d : arr) os << fixed << setprecision(7) << d.stdev << '|';
 	os << endl << "|se|";
-	for (analyzer<T>& d : arr) os << fixed << setprecision(7) << d.se << '|';
+	for (analyzer_c<T>& d : arr) os << fixed << setprecision(7) << d.se << '|';
 	os << endl << "|95%CI|";
-	for (analyzer<T>& d : arr) os << fixed << setprecision(7) << d.confidence_95 << '|';
+	for (analyzer_c<T>& d : arr) os << fixed << setprecision(7) << d.confidence_95 << '|';
 	os << endl << "|95%CI.max|";
-	for (analyzer<T>& d : arr) os << fixed << setprecision(7) << d.confidence_95_max << '|';
+	for (analyzer_c<T>& d : arr) os << fixed << setprecision(7) << d.confidence_95_max << '|';
 	os << endl << "|95%CI.min|";
-	for (analyzer<T>& d : arr) os << fixed << setprecision(7) << d.confidence_95_min << '|';
+	for (analyzer_c<T>& d : arr) os << fixed << setprecision(7) << d.confidence_95_min << '|';
 	os << endl;
 }
 
@@ -132,7 +133,7 @@ class time_logger {
 public:
 	using logging_unit = std::chrono::nanoseconds;
 	using rep = logging_unit::rep;
-	using analyzer = analyzer<rep>;
+	using analyzer = analyzer_c<rep>;
 private:
 	std::deque<rep> logbuf_;
 	const char* qsort_func_name_;
@@ -160,7 +161,7 @@ public:
 	}
 	template<typename rep, typename period, std::enable_if_t<!std::is_same<std::chrono::duration<rep, period>, logging_unit>::value, std::nullptr_t> = nullptr>
 	void push(const std::chrono::duration<rep, period>& time) {
-		this->push(std::chrono::duration_cast<logging_unit>(time), fpip);
+		this->push(std::chrono::duration_cast<logging_unit>(time));
 	}
 	void set_cmp_cnt(size_t cmp_cnt) noexcept { this->cmp_cnt_ = cmp_cnt; }
 #ifdef DEBUG
