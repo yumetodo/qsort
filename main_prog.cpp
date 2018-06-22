@@ -1,4 +1,4 @@
-/*=============================================================================
+﻿/*=============================================================================
   Copyright (C) 2018 河村　知行 <t-kawa@crux.ocn.ne.jp>
   Copyright (C) 2018 yumetodo <yume-wikijp@live.jp>
   Distributed under the Boost Software License, Version 1.0.
@@ -65,10 +65,13 @@ int main(int argc, char **argv) {
 		{
 		case 4:
 			g_QS_MID3 = std::stoi(argv[7]);//size がこれ以上=のときに間接ソートを追加 qs10の既定値400
+			/* fall through */
 		case 3:
 			g_QS_MID2 = std::stoi(argv[6]);//n がこれ以下で９点処理を行う qs9の既定値900
+			/* fall through */
 		case 2:
 			g_QS_MID1 = std::stoi(argv[5]);//n がこれ以下で３点処理を行う qs9の既定値140
+			/* fall through */
 		default:
 			break;
 		}
