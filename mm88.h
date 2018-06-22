@@ -18,6 +18,7 @@ extern size_t g_QS_MVR;
 #		define DEBUG 1
 #	endif
 void init_ass_cnt();
+void inc_ass_cnt(size_t d);
 size_t get_ass_cnt();
 #endif
 

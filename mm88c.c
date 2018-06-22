@@ -18,6 +18,7 @@ size_t g_QS_MVR = 116;
 #ifdef DEBUG
 static size_t ass_cnt; /*代入回数を計測しないときは、削除可能*/
 void init_ass_cnt() { ass_cnt = 0; }
+void inc_ass_cnt(size_t d) { ass_cnt += d; }
 size_t get_ass_cnt() { return ass_cnt; }
 #endif
 

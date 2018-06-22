@@ -18,8 +18,8 @@ set(
     "./target_data.cpp"
     "./global_variable.c"
     "./mm88c.c"
-    "./qs10a5.c"
-    "./qs10a5m.c"
+    "./qs10a6.c"
+    "./qs10a6m.c"
     "./qs9e17.c"
     "./die.c"
 )

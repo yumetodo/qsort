@@ -4,17 +4,17 @@
   Distributed under the Boost Software License, Version 1.0.
   (See https://www.boost.org/LICENSE_1_0.txt)
 =============================================================================*/
-#ifndef INC_QS10a5M_H_
-#define INC_QS10a5M_H_
+#ifndef INC_QS10a6_H_
+#define INC_QS10a6_H_
 #ifdef __cplusplus
 extern "C" {
 #endif
 #include <stddef.h>
 
-void qsort10a5m( void *base, size_t nel, size_t size,  int (*cmp)(const void *a, const void *b) );
+void qsort10a6( void *base, size_t nel, size_t size,  int (*cmp)(const void *a, const void *b) );
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif //INC_QS10a5M_H_
+#endif //INC_QS10a6_H_

@@ -1,4 +1,4 @@
-﻿/*=============================================================================
+/*=============================================================================
   Copyright (C) 2018 河村　知行 <t-kawa@crux.ocn.ne.jp>
   Copyright (C) 2018 yumetodo <yume-wikijp@live.jp>
   Distributed under the Boost Software License, Version 1.0.
@@ -8,8 +8,8 @@
 #include <stdlib.h>
 #include "mm88.h"
 #include "qs9e17.h"
-#include "qs10a5.h"
-#include "qs10a5m.h"
+#include "qs10a6.h"
+#include "qs10a6m.h"
 #include "global_variable.h"
 #include "target_data.hpp"
 #include "time_logger.hpp"
@@ -72,8 +72,8 @@ int main(int argc, char **argv) {
 		default:
 			break;
 		}
-		const char* const qsort_func_name[] = { "qsort", "qs9e17", "qs10a5", "qs10a5m" };
-		const qsort_func_t qsort_f[] = { qsort, qsort9e17, qsort10a5, qsort10a5m };
+		const char* const qsort_func_name[] = { "qsort", "qs9e17", "qs10a6", "qs10a6m" };
+		const qsort_func_t qsort_f[] = { qsort, qsort9e17, qsort10a6, qsort10a6m };
 		static_assert(std_future::size(qsort_func_name) == std_future::size(qsort_f), "err");
 		for (int div_val : { -3, 100, 2 }) for (size_t arr_max : { 10000u }) for (size_t rec_siz : { 8u, 20u, 24u, 500u, 1000u }) {
 			const size_t iterate = decide_itarate(div_val, rec_siz, 10);

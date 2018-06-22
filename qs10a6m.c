@@ -5,4 +5,4 @@
   (See https://www.boost.org/LICENSE_1_0.txt)
 =============================================================================*/
 #define USE_MEMCPY
-#include "qs10a5_impl.h"
+#include "qs10a6_impl.h"

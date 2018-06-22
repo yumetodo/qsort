@@ -5,23 +5,31 @@
   (See https://www.boost.org/LICENSE_1_0.txt)
 =============================================================================*/
 /**
- * @file qs10a5.c
+ * @file qs10a6_impl.h
  * @brief Quick sort function
  * @date 2018.6.1
  */
 #include <stdio.h>
 #include <stdlib.h>
-#include "qs10a5.h"
 #include "mm88.h"
 #include "die.h"
 #include "global_variable.h"
+
+#ifdef DEBUG
+#define MMCNT inc_ass_cnt
+#else
+#define MMCNT(x)
+#endif
+
 #ifdef USE_MEMCPY
 #define MMPRE()
 #include <string.h>
+#define MMCPY(dst, src, siz)  { memcpy(dst, src, size); MMCNT(1); }
 #else
 #define MMPRE()               mmprepare( base, size );
-#define memcpy(dst, src, siz) mmmove(dst, src)
+#define MMCPY(dst, src, siz) mmmove(dst, src);
 #endif
+
 #include <malloc.h>
 
 //typedef long unsigned int size_t;
@@ -49,9 +57,9 @@ typedef struct { char *LLss, *RRss; } stack_node;   /*L,Rを積むスタック�
 #define D(x)     {x-=size;}
 
 #ifndef USE_MEMCPY
-void    qsort10a5
+void    qsort10a6
 #else
-void    qsort10a5m
+void    qsort10a6m
 #endif
 ( void *base, size_t nel, size_t size,  int (*cmp)(const void *a, const void *b) )
 {
@@ -327,7 +335,11 @@ indirect_sort:       //間接ソートを実行
  for (ip=base, tp=arr; ip<=R; ip+=size, tp++) *tp=(void*)ip;
  cmp_org = cmp;
 
- qsort10a5( arr, nel, sizeof(char*), cmp_indirect );
+#ifndef USE_MEMCPY
+ qsort10a6( arr, nel, sizeof(char*), cmp_indirect );
+#else
+ qsort10a6m( arr, nel, sizeof(char*), cmp_indirect );
+#endif
 
  MMPRE()
  tp = arr;
@@ -340,13 +352,13 @@ indirect_sort:       //間接ソートを実行
      {
        size_t j = i;
        char *jp = ip;
-       memcpy(tmp, ip, size);
+       MMCPY(tmp, ip, size)
 
        do
          {
            size_t k = (kp - (char *) base) / size;
            tp[j] = jp;
-           memcpy(jp, kp, size);
+           MMCPY(jp, kp, size)
            j = k;
            jp = kp;
            kp = tp[k];
@@ -354,7 +366,7 @@ indirect_sort:       //間接ソートを実行
        while (kp != ip);
 
        tp[j] = jp;
-       memcpy(jp, tmp, size);
+       MMCPY(jp, tmp, size)
      }
  free(arr);
  }
