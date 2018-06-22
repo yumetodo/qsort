@@ -48,8 +48,8 @@ void target_data::init() {
 	std::mt19937 engine = create_random_engine();
 	switch (div_val) {
 	case 0: for (size_t i = 0; i < arr_max; i++) key(i) = 5; break; //一定
-	case -1: for (size_t i = 0; i < arr_max; i++) key(i) = int(i) + 1;//昇順
-	case -2: for (size_t i = 0; i < arr_max; i++) key(i) = int(arr_max - i);//降順
+	case -1: for (size_t i = 0; i < arr_max; i++) key(i) = int(i) + 1; break;//昇順
+	case -2: for (size_t i = 0; i < arr_max; i++) key(i) = int(arr_max - i); break;//降順
 	case -3://同値キーがない乱数　入れ替えで
 		for (size_t i = 0; i < arr_max; i++) key(i) = int(i);
 		for (size_t i = 0; i < arr_max; i++) {
@@ -57,7 +57,7 @@ void target_data::init() {
 			std::swap(key(i), key(x));
 		}
 		break;
-	case 1: for (size_t i = 0; i < arr_max; i++) key(i) = std::uniform_int_distribution<>(0, 2147483647)(engine);//乱数
+	case 1: for (size_t i = 0; i < arr_max; i++) key(i) = std::uniform_int_distribution<>(0, 2147483647)(engine); break;//乱数
 	default:
 		if (div_val >= 2) for (size_t i = 0; i < arr_max; i++) key(i) = std::uniform_int_distribution<>(0, div_val - 1)(engine);
 		break;
