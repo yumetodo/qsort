@@ -9,21 +9,34 @@
 # define pppppp(x,c)
 #endif
 
-#include <alloca.h>
+#if defined(WIN32) || defined(__WIN32) || defined(__WIN32__)
+    #include <malloc.h>
+#else
+    #include <alloca.h>
+#endif
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
+#if !defined(_MSC_VER)
+#	include <stdalign.h>
+#else
+#	define alignof __alignof
+void *
+mempcpy (void *dest, const void *src, size_t n)
+{
+  return (char *) memcpy (dest, src, n) + n;
+}
+#endif
+//#include <unistd.h>
 //#include <memcpy.h>
 //_PTR _EXFUN(mempcpy,(_PTR, const _PTR, size_t));
-void * __mempcpy(void* dstpp, const void* srcpp, size_t len);
-typedef int (*__compar_d_fn_t) (const void *, const void *, void *);
+typedef int (*compar_d_fn_t) (const void *, const void *, void *);
 
 struct msort_param
 {
   size_t s;
   size_t var;
-  __compar_d_fn_t cmp;
+  compar_d_fn_t cmp;
   void *arg;
   char *t;
 };
@@ -48,7 +61,7 @@ msort_with_tmp (const struct msort_param *p, void *b, size_t n)
 
   char *tmp = p->t;
   const size_t s = p->s;
-  __compar_d_fn_t cmp = p->cmp;
+  compar_d_fn_t cmp = p->cmp;
   void *arg = p->arg;
   switch (p->var)
     {
@@ -136,16 +149,16 @@ msort_with_tmp (const struct msort_param *p, void *b, size_t n)
     default:
       while (n1 > 0 && n2 > 0)
         {
-          pppppp(" *__mempcpy  \n", 1)
+          pppppp(" *mempcpy  \n", 1)
           if ((*cmp) (b1, b2, arg) <= 0)
             {
-              tmp = (char *) __mempcpy (tmp, b1, s);
+              tmp = (char *) mempcpy (tmp, b1, s);
               b1 += s;
               --n1;
             }
           else
             {
-              tmp = (char *) __mempcpy (tmp, b2, s);
+              tmp = (char *) mempcpy (tmp, b2, s);
               b2 += s;
               --n2;
             }
@@ -161,7 +174,7 @@ msort_with_tmp (const struct msort_param *p, void *b, size_t n)
 
 
 static void
-__qsort_r (void *b, size_t n, size_t s, __compar_d_fn_t cmp, void *arg)
+qsort_r (void *b, size_t n, size_t s, compar_d_fn_t cmp, void *arg)
 {
   size_t size = n * s;
   char *tmp = NULL;
@@ -233,16 +246,16 @@ __qsort_r (void *b, size_t n, size_t s, __compar_d_fn_t cmp, void *arg)
   else
     {
       if ((s & (sizeof (uint32_t) - 1)) == 0
-          && ((char *) b - (char *) 0) % __alignof__ (uint32_t) == 0)
+          && ((char *) b - (char *) 0) % alignof(uint32_t) == 0)
         {
           if (s == sizeof (uint32_t))
             p.var = 0;
           else if (s == sizeof (uint64_t)
-                   && ((char *) b - (char *) 0) % __alignof__ (uint64_t) == 0)
+                   && ((char *) b - (char *) 0) % alignof(uint64_t) == 0)
             p.var = 1;
           else if ((s & (sizeof (unsigned long) - 1)) == 0
                    && ((char *) b - (char *) 0)
-                      % __alignof__ (unsigned long) == 0)
+                      % alignof(unsigned long) == 0)
             p.var = 2;
         }
       msort_with_tmp (&p, b, n);
@@ -251,7 +264,7 @@ __qsort_r (void *b, size_t n, size_t s, __compar_d_fn_t cmp, void *arg)
 }
 
 void
-qsort226ms2 (void *b, size_t n, size_t s, __compar_fn_t cmp)
+qsort226ms2 (void *b, size_t n, size_t s,  int (*cmp)(const void *a, const void *b))
 {
-  return __qsort_r (b, n, s, (__compar_d_fn_t) cmp, NULL);
+  qsort_r (b, n, s, (compar_d_fn_t) cmp, NULL);
 }
