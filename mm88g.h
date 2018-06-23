@@ -286,7 +286,7 @@ QSORT_MM88_EXPORT void mmprepare( void *base, size_t size )
 QSORT_MM88_EXPORT void mmmove(char *a, const char *b)
 {
 #ifdef DEBUG
-	ass_cnt += 1;
+	inc_ass_cnt(1);
 #endif
 	if (mmkind == 8 && INT64_OK) HIGHLOW(high, low, MV8, 8, (void)a)
 	else if (mmkind == 4) HIGHLOW(high, low, MV4, 4, (void)a)
