@@ -6,11 +6,24 @@
 =============================================================================*/
 #ifndef INC_GLOBAL_VARIABLE_H_
 #define INC_GLOBAL_VARIABLE_H_
+#include <stddef.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
-#include <stddef.h>
+
 extern size_t g_QS_MID1, g_QS_MID2, g_QS_MID3;
+
+extern size_t g_QS_MVR;
+
+#if defined(DEBUG) || !defined(NDEBUG)
+#	ifndef DEBUG
+#		define DEBUG 1
+#	endif
+void init_ass_cnt();
+void inc_ass_cnt(size_t d);
+size_t get_ass_cnt();
+#endif
+
 #ifdef __cplusplus
 }
 #endif

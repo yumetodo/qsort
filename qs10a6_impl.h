@@ -11,23 +11,23 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
-#include "mm88.h"
+#include "mm88g.h"
 #include "die.h"
 #include "global_variable.h"
 
 #ifdef DEBUG
-#define MMCNT inc_ass_cnt
+# define MMCNT inc_ass_cnt
 #else
-#define MMCNT(x)
+# define MMCNT(x)
 #endif
 
 #ifdef USE_MEMCPY
-#define MMPRE()
-#include <string.h>
-#define MMCPY(dst, src, siz)  { memcpy(dst, src, size); MMCNT(1); }
+# define MMPRE()
+# include <string.h>
+# define MMCPY(dst, src, siz)  { memcpy(dst, src, size); MMCNT(1); }
 #else
-#define MMPRE()               mmprepare( base, size );
-#define MMCPY(dst, src, siz) mmmove(dst, src);
+# define MMPRE()               mmprepare( base, size );
+# define MMCPY(dst, src, siz)  mmmove(dst, src);
 #endif
 
 #include <malloc.h>

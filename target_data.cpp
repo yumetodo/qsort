@@ -5,7 +5,7 @@ Distributed under the Boost Software License, Version 1.0.
 (See https://www.boost.org/LICENSE_1_0.txt)
 =============================================================================*/
 #include "target_data.hpp"
-#include "mm88.h"
+#include "global_variable.h"
 #include <stdexcept>
 #include <vector>
 #include <string>

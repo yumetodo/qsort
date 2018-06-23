@@ -11,7 +11,7 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
-#include "mm88.h"
+#include "mm88g.h"
 #include "die.h"
 #include "global_variable.h"
 
@@ -24,10 +24,10 @@ typedef struct { char *LLss, *RRss; } stack_node;   /*L,Rを積むスタック�
 #define med3(a,b,c) ((t=(*cmp)(a,b))<=0 ? ((*cmp)(b,c)<=0 ? b : (t==0 ? b : ((*cmp)(a,c)<=0 ? c : a))) : \
                                           ((*cmp)(b,c)>=0 ? b :             ((*cmp)(a,c)<=0 ? a : c) ))
 
-#define  LT(a,b)  if ((t=(*cmp)(a,b)) <  0) 
-#define  LE(a,b)  if ((t=(*cmp)(a,b)) <= 0) 
-#define  GT(a,b)  if ((t=(*cmp)(a,b)) >  0) 
-#define  GE(a,b)  if ((t=(*cmp)(a,b)) >= 0) 
+#define  LT(a,b)  if ((t=(*cmp)(a,b)) <  0)
+#define  LE(a,b)  if ((t=(*cmp)(a,b)) <= 0)
+#define  GT(a,b)  if ((t=(*cmp)(a,b)) >  0)
+#define  GE(a,b)  if ((t=(*cmp)(a,b)) >= 0)
 #define  else_GT  else if (t > 0)
 #define  else_LT  else if (t < 0)
 
@@ -52,9 +52,9 @@ LOOP:
  if (L>=R) {goto nxt;}
 loop:
  if (L + size == R) {if ((*cmp)(L,R) > 0) S(L,R) goto nxt;} /*要素数２*/
- 
+
  n = (R - L + size) / size;  /*要素数*/
- 
+
  if (n <= 4) {
    m = R - size;
    LT(L,m)  GT(m,R)  LE(L,R)  S(m,R)    /*3-5-3,4*/
@@ -113,7 +113,7 @@ loop:
 
 
 
- {char *p,*z1,*z2,*z3; size_t w2;            //２７点処理 
+ {char *p,*z1,*z2,*z3; size_t w2;            //２７点処理
  p=m-(w2=size*3)*4;  f=p+size; g=f+size; z1=med3(p, f, g);
            p+=w2;    f+=w2;     g+=w2;     z2=med3(p, f, g);
            p+=w2;    f+=w2;     g+=w2;     z3=med3(p, f, g); l=med3(z1, z2, z3);
@@ -132,19 +132,19 @@ loop:
 
 /*
 333...555...777　　lfgr のlの位置から比較を始める。357を貯める。 l[fg]r系　 この系は l<=f g<=r を保証
-L  l f m g r  R 
+L  l f m g r  R
 mは分割要素を指す。mもその要素も1回の分割終了の直前まで、変更なし。
-「5」分割要素と同キーの要素を表す。「3」5より小さいキーの要素を表す。「7」5より大きいキーの要素を表す。 
+「5」分割要素と同キーの要素を表す。「3」5より小さいキーの要素を表す。「7」5より大きいキーの要素を表す。
 「l」333の右隣の要素を指す 「r」777の左隣の要素を指す 「L」先頭要素を指す 「R」最終要素を指す
 「f」555の左隣の要素を指す 「g」555の右隣の要素を指す
 「.」未比較の要素の列(長さ0以上)を表す  「_」未比較の要素1つを表す
 
 333355555...777 になったら 333355555...777 にする。333355555333...777 として第2の3を貯める。
-   fl    g r                  f     l r               f     g  l r   
+   fl    g r                  f     l r               f     g  l r
    f<l になったら                   l=g; する。             gとlの間に3を貯める。 [fg]lr系  r<lもあり
 
 333...555557777 になったら 333...555557777 にする。333...777555557777 として第2の7を貯める。
-   l f    rg  R               l r     g  R            l r  f     g   
+   l f    rg  R               l r     g  R            l r  f     g
           r<g になったら        r=f; する。             rとfの間に7を貯める。     lr[fg]系  r<lもあり
 */
 
@@ -153,7 +153,7 @@ chk:                                          // L l f  g r R
            else      {r=f;      goto _lrfg;}  // 33..5577
  else      if (g<=r) {l=g;      goto _fglr;}  // 3355..77
            else      {D(l) I(r) goto fin;  }  // 333555777
-            
+
 chk_lf:
  if (l>f)  {l=g; goto _fglr;}    // 3355..77
                                                     //L l f  g r R
@@ -189,7 +189,7 @@ _5fgr_g:
                  else LT(r,m) {/*_5f73:*/ K(l,r,g) I(l) I(g) D(r) goto chk;    }  //335.557377
                       else_GT {/*_5f77:*/ D(r)                    goto _5f7r;  }
                       else    {/*_5f75:*/ S(g,r) I(g) D(r)        goto _5fgr_ ;}}
- else    {/*_5f5r:*/ I(g)  _5fgr_: if (g<=r) {    /*goto _5fgr;*/ goto _5fgr_g;} 
+ else    {/*_5f5r:*/ I(g)  _5fgr_: if (g<=r) {    /*goto _5fgr;*/ goto _5fgr_g;}
                                else      {r=f;                goto _5rfg;  }}
 //die("_5fgr_g");
 
@@ -250,7 +250,7 @@ _lrfg: //mの要素が移動することはない
 
 fin_rlfg:
  if (r+size != l && r+size*2 != l) die("fin_rlfg");
- I(f); 
+ I(f);
  if (f < l) exit(7);
  if ((v=f-l)<=0) {l=r; r=g; goto fin;}
  if (g < f) exit(8);
@@ -278,7 +278,7 @@ _fglr:
 
 fin_fgrl:                                              //333355533333777   3333555333335777
  if (r+size != l && r+size*2 != l) die("fin_fgrl");    //   f   g   rl        f   g   r l
- I(f); 
+ I(f);
  if ((v=r-g+size)<=0) {r=l; l=f-size; goto fin;}
  if (g < f) exit(9);
  if ((w=g-f)==size) S(f,r)
