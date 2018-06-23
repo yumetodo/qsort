@@ -5,22 +5,24 @@
   (See https://www.boost.org/LICENSE_1_0.txt)
 =============================================================================*/
 /**
- * @file mm88c.c
+ * @file mm88c.c, mm88g.c
  * @brief 配列の要素のスワップ関数
  * @date 2017.11.30
+ *
+ * @fn void mmrot3( char *a, char *b, char *c );
+ * @fn void mmswapblock( char *a, char *b, size_t size );
+ * @fn void mmswap(char *a, char *b);
+ * @fn void mmprepare( void *base, size_t size );
+ * @fn void mmmove(char *a, const char *b);
+ *
  */
-#include "mm88.h"
+#ifndef INC_MM88G_H_
+#define INC_MM88G_H_
+#include "global_variable.h"
 #include "die.h"
 #include <stdbool.h>
 
-/*８バイト整数(long long int)を使用して高速化  繰り返しは8回(64byte)分展開する*/
-size_t g_QS_MVR = 116;
-#ifdef DEBUG
-static size_t ass_cnt; /*代入回数を計測しないときは、削除可能*/
-void init_ass_cnt() { ass_cnt = 0; }
-void inc_ass_cnt(size_t d) { ass_cnt += d; }
-size_t get_ass_cnt() { return ass_cnt; }
-#endif
+#define QSORT_MM88_EXPORT static inline
 
 static size_t mmkind, mmsize, high, low, high32_4;
 static bool mmquick;
@@ -58,20 +60,20 @@ static bool mmquick;
 
 #define INT64_OK  (sizeof(char*)==8)
 
-void mmswapblock( char *a, char *b, size_t size )
+QSORT_MM88_EXPORT void mmswapblock( char *a, char *b, size_t size )
 {
 #ifdef DEBUG
- ass_cnt += (size/mmsize)*2;
+ inc_ass_cnt((size/mmsize)*2);
 #endif
  if      (mmkind == 8 && INT64_OK) HIGHLOW((size&(-64)),(size&(64-1)),SW8,8,(void)a)
  else if (mmkind == 4            ) HIGHLOW((size&(-32)),(size&(32-1)),SW4,4,(void)a)
  else   /*mmkind == 1*/            HIGHLOW((size&( -8)),(size&( 8-1)),SW1,1,(void)a)
 }
 
-void mmrot3( char *a, char *b, char *c )
+QSORT_MM88_EXPORT void mmrot3( char *a, char *b, char *c )
 {
 #ifdef DEBUG
- ass_cnt += 3;
+ inc_ass_cnt(3);
 #endif
  if      (mmkind == 8 && INT64_OK) HIGHLOW(high,low,RT8,8,c+=64)
  else if (mmkind == 4            ) HIGHLOW(high,low,RT4,4,c+=32)
@@ -80,9 +82,9 @@ void mmrot3( char *a, char *b, char *c )
 
 static void (*mmswapi)(char *, char *);
 
-void mmswap(char *a, char *b) {
+QSORT_MM88_EXPORT void mmswap(char *a, char *b) {
 #ifdef DEBUG
- ass_cnt += 2;
+ inc_ass_cnt(2);
 #endif
  if (mmquick)
 #if defined(_MSC_VER) && !defined(__c2__)
@@ -99,10 +101,9 @@ void mmswap(char *a, char *b) {
 //#define  mmswap(a,b)  (*mmswapi)(a,b)  //gcc6.4.0 では上のinlineと同じコードが出る
 
 
-
-static void mmswap1( char *a, char *b ) //if (a==b) return;  a と b は異なっていること
+static inline void mmswap1( char *a, char *b ) //if (a==b) return;  a と b は異なっていること
 {
- HIGHLOW(high,low,SW1,1,(void)a)
+  HIGHLOW(high,low,SW1,1,(void)a)
 }
 
 #define EXD8(MOV,WS) { \
@@ -110,40 +111,40 @@ static void mmswap1( char *a, char *b ) //if (a==b) return;  a と b は異な�
      do {MOV(0) MOV(1) MOV(2) MOV(3) MOV(4) MOV(5) MOV(6) MOV(7)  b += 8*WS; a += 8*WS; \
      }while (a < e); }
 
-static void mmswap801(char *a, char *b) {SW8(0)}
-static void mmswap802(char *a, char *b) {SW8(0) SW8(1)}
-static void mmswap803(char *a, char *b) {SW8(0) SW8(1) SW8(2)}
-static void mmswap804(char *a, char *b) {SW8(0) SW8(1) SW8(2) SW8(3)}
-static void mmswap805(char *a, char *b) {SW8(0) SW8(1) SW8(2) SW8(3) SW8(4)}
-static void mmswap806(char *a, char *b) {SW8(0) SW8(1) SW8(2) SW8(3) SW8(4) SW8(5)}
-static void mmswap807(char *a, char *b) {SW8(0) SW8(1) SW8(2) SW8(3) SW8(4) SW8(5) SW8(6)}
+static inline void mmswap801(char *a, char *b) {SW8(0)}
+static inline void mmswap802(char *a, char *b) {SW8(0) SW8(1)}
+static inline void mmswap803(char *a, char *b) {SW8(0) SW8(1) SW8(2)}
+static inline void mmswap804(char *a, char *b) {SW8(0) SW8(1) SW8(2) SW8(3)}
+static inline void mmswap805(char *a, char *b) {SW8(0) SW8(1) SW8(2) SW8(3) SW8(4)}
+static inline void mmswap806(char *a, char *b) {SW8(0) SW8(1) SW8(2) SW8(3) SW8(4) SW8(5)}
+static inline void mmswap807(char *a, char *b) {SW8(0) SW8(1) SW8(2) SW8(3) SW8(4) SW8(5) SW8(6)}
 
-static void mmswap810(char *a, char *b) {EXD8(SW8,8)}
-static void mmswap811(char *a, char *b) {EXD8(SW8,8) SW8(0)}
-static void mmswap812(char *a, char *b) {EXD8(SW8,8) SW8(0) SW8(1)}
-static void mmswap813(char *a, char *b) {EXD8(SW8,8) SW8(0) SW8(1) SW8(2)}
-static void mmswap814(char *a, char *b) {EXD8(SW8,8) SW8(0) SW8(1) SW8(2) SW8(3)}
-static void mmswap815(char *a, char *b) {EXD8(SW8,8) SW8(0) SW8(1) SW8(2) SW8(3) SW8(4)}
-static void mmswap816(char *a, char *b) {EXD8(SW8,8) SW8(0) SW8(1) SW8(2) SW8(3) SW8(4) SW8(5)}
-static void mmswap817(char *a, char *b) {EXD8(SW8,8) SW8(0) SW8(1) SW8(2) SW8(3) SW8(4) SW8(5) SW8(6)}
+static inline void mmswap810(char *a, char *b) {EXD8(SW8,8)}
+static inline void mmswap811(char *a, char *b) {EXD8(SW8,8) SW8(0)}
+static inline void mmswap812(char *a, char *b) {EXD8(SW8,8) SW8(0) SW8(1)}
+static inline void mmswap813(char *a, char *b) {EXD8(SW8,8) SW8(0) SW8(1) SW8(2)}
+static inline void mmswap814(char *a, char *b) {EXD8(SW8,8) SW8(0) SW8(1) SW8(2) SW8(3)}
+static inline void mmswap815(char *a, char *b) {EXD8(SW8,8) SW8(0) SW8(1) SW8(2) SW8(3) SW8(4)}
+static inline void mmswap816(char *a, char *b) {EXD8(SW8,8) SW8(0) SW8(1) SW8(2) SW8(3) SW8(4) SW8(5)}
+static inline void mmswap817(char *a, char *b) {EXD8(SW8,8) SW8(0) SW8(1) SW8(2) SW8(3) SW8(4) SW8(5) SW8(6)}
 
 
-static void mmswap401(char *a, char *b) {SW4(0)}
-static void mmswap402(char *a, char *b) {SW4(0) SW4(1)}
-static void mmswap403(char *a, char *b) {SW4(0) SW4(1) SW4(2)}
-static void mmswap404(char *a, char *b) {SW4(0) SW4(1) SW4(2) SW4(3)}
-static void mmswap405(char *a, char *b) {SW4(0) SW4(1) SW4(2) SW4(3) SW4(4)}
-static void mmswap406(char *a, char *b) {SW4(0) SW4(1) SW4(2) SW4(3) SW4(4) SW4(5)}
-static void mmswap407(char *a, char *b) {SW4(0) SW4(1) SW4(2) SW4(3) SW4(4) SW4(5) SW4(6)}
+static inline void mmswap401(char *a, char *b) {SW4(0)}
+static inline void mmswap402(char *a, char *b) {SW4(0) SW4(1)}
+static inline void mmswap403(char *a, char *b) {SW4(0) SW4(1) SW4(2)}
+static inline void mmswap404(char *a, char *b) {SW4(0) SW4(1) SW4(2) SW4(3)}
+static inline void mmswap405(char *a, char *b) {SW4(0) SW4(1) SW4(2) SW4(3) SW4(4)}
+static inline void mmswap406(char *a, char *b) {SW4(0) SW4(1) SW4(2) SW4(3) SW4(4) SW4(5)}
+static inline void mmswap407(char *a, char *b) {SW4(0) SW4(1) SW4(2) SW4(3) SW4(4) SW4(5) SW4(6)}
 
-static void mmswap410(char *a, char *b) {EXD8(SW4,4)}
-static void mmswap411(char *a, char *b) {EXD8(SW4,4) SW4(0)}
-static void mmswap412(char *a, char *b) {EXD8(SW4,4) SW4(0) SW4(1)}
-static void mmswap413(char *a, char *b) {EXD8(SW4,4) SW4(0) SW4(1) SW4(2)}
-static void mmswap414(char *a, char *b) {EXD8(SW4,4) SW4(0) SW4(1) SW4(2) SW4(3)}
-static void mmswap415(char *a, char *b) {EXD8(SW4,4) SW4(0) SW4(1) SW4(2) SW4(3) SW4(4)}
-static void mmswap416(char *a, char *b) {EXD8(SW4,4) SW4(0) SW4(1) SW4(2) SW4(3) SW4(4) SW4(5)}
-static void mmswap417(char *a, char *b) {EXD8(SW4,4) SW4(0) SW4(1) SW4(2) SW4(3) SW4(4) SW4(5) SW4(6)}
+static inline void mmswap410(char *a, char *b) {EXD8(SW4,4)}
+static inline void mmswap411(char *a, char *b) {EXD8(SW4,4) SW4(0)}
+static inline void mmswap412(char *a, char *b) {EXD8(SW4,4) SW4(0) SW4(1)}
+static inline void mmswap413(char *a, char *b) {EXD8(SW4,4) SW4(0) SW4(1) SW4(2)}
+static inline void mmswap414(char *a, char *b) {EXD8(SW4,4) SW4(0) SW4(1) SW4(2) SW4(3)}
+static inline void mmswap415(char *a, char *b) {EXD8(SW4,4) SW4(0) SW4(1) SW4(2) SW4(3) SW4(4)}
+static inline void mmswap416(char *a, char *b) {EXD8(SW4,4) SW4(0) SW4(1) SW4(2) SW4(3) SW4(4) SW4(5)}
+static inline void mmswap417(char *a, char *b) {EXD8(SW4,4) SW4(0) SW4(1) SW4(2) SW4(3) SW4(4) SW4(5) SW4(6)}
 
 
 #define ENINT(x)  ((char*)(x) - (char*)0)
@@ -166,22 +167,19 @@ static void mmswap417(char *a, char *b) {EXD8(SW4,4) SW4(0) SW4(1) SW4(2) SW4(3)
  } \
 }
 
-static void mmswap4L00(char *a, char *b) MMswapL({}                         , SW8(0) SW8(1) SW8(2) SW4(6), {})
-static void mmswap4L04(char *a, char *b) MMswapL(SW4(0)                     , {}                         , SW4(0))
-static void mmswap4L08(char *a, char *b) MMswapL(SW8(0)                     , SW4(0)                     , SW4(0) SW4(1))
-static void mmswap4L12(char *a, char *b) MMswapL(SW8(0) SW4(2)              , SW8(0)                     , SW4(0) SW4(1) SW4(2))
-static void mmswap4L16(char *a, char *b) MMswapL(SW8(0) SW8(1)              , SW8(0) SW4(2)              , SW4(0) SW4(1) SW4(2) SW4(3))
-static void mmswap4L20(char *a, char *b) MMswapL(SW8(0) SW8(1) SW4(4)       , SW8(0) SW8(1)              , SW4(0) SW4(1) SW4(2) SW4(3) SW4(4))
-static void mmswap4L24(char *a, char *b) MMswapL(SW8(0) SW8(1) SW8(2)       , SW8(0) SW8(1) SW4(4)       , SW4(0) SW4(1) SW4(2) SW4(3) SW4(4) SW4(5))
-static void mmswap4L28(char *a, char *b) MMswapL(SW8(0) SW8(1) SW8(2) SW4(6), SW8(0) SW8(1) SW8(2)       , SW4(0) SW4(1) SW4(2) SW4(3) SW4(4) SW4(5) SW4(6))
-
-
-
+static inline void mmswap4L00(char *a, char *b) MMswapL({}                         , SW8(0) SW8(1) SW8(2) SW4(6), {})
+static inline void mmswap4L04(char *a, char *b) MMswapL(SW4(0)                     , {}                         , SW4(0))
+static inline void mmswap4L08(char *a, char *b) MMswapL(SW8(0)                     , SW4(0)                     , SW4(0) SW4(1))
+static inline void mmswap4L12(char *a, char *b) MMswapL(SW8(0) SW4(2)              , SW8(0)                     , SW4(0) SW4(1) SW4(2))
+static inline void mmswap4L16(char *a, char *b) MMswapL(SW8(0) SW8(1)              , SW8(0) SW4(2)              , SW4(0) SW4(1) SW4(2) SW4(3))
+static inline void mmswap4L20(char *a, char *b) MMswapL(SW8(0) SW8(1) SW4(4)       , SW8(0) SW8(1)              , SW4(0) SW4(1) SW4(2) SW4(3) SW4(4))
+static inline void mmswap4L24(char *a, char *b) MMswapL(SW8(0) SW8(1) SW8(2)       , SW8(0) SW8(1) SW4(4)       , SW4(0) SW4(1) SW4(2) SW4(3) SW4(4) SW4(5))
+static inline void mmswap4L28(char *a, char *b) MMswapL(SW8(0) SW8(1) SW8(2) SW4(6), SW8(0) SW8(1) SW8(2)       , SW4(0) SW4(1) SW4(2) SW4(3) SW4(4) SW4(5) SW4(6))
 
 //以下、「ポインタが８バイト(sizeof(char*)==8)なら、機械語の８バイト整数あり」と仮定している。
 //「ポインタが４バイトなのに、機械語の８バイト整数あり」では、十分な性能はでない。
 
-void mmprepare( void *base, size_t size )
+QSORT_MM88_EXPORT void mmprepare( void *base, size_t size )
 {
 #ifdef DEBUG
 #if defined(_MSC_VER) && !defined(__c2__)
@@ -285,12 +283,13 @@ void mmprepare( void *base, size_t size )
 #define  MV8(i) {A8[i] = B8[i];}
 #define  MV4(i) {A4[i] = B4[i];}
 #define  MV1(i) { a[i] =  b[i];}
-void mmmove(char *a, const char *b)
+QSORT_MM88_EXPORT void mmmove(char *a, const char *b)
 {
 #ifdef DEBUG
-	ass_cnt += 1;
+	inc_ass_cnt(1);
 #endif
 	if (mmkind == 8 && INT64_OK) HIGHLOW(high, low, MV8, 8, (void)a)
 	else if (mmkind == 4) HIGHLOW(high, low, MV4, 4, (void)a)
 	else   /*mmkind == 1*/            HIGHLOW(high, low, MV1, 1, (void)a)
 }
+#endif

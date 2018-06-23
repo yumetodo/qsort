@@ -9,7 +9,6 @@
 #include <algorithm>
 #include <cmath>
 #include "std_future.hpp"
-#include "mm88.h"
 template<typename T>
 struct analyzer_c {
 	using value_type = T;

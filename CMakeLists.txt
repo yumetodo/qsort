@@ -17,7 +17,6 @@ set(
     "./main_prog.cpp"
     "./target_data.cpp"
     "./global_variable.c"
-    "./mm88c.c"
     "./qs10a6.c"
     "./qs10a6m.c"
     "./qs9e17.c"
