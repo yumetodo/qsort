@@ -20,6 +20,7 @@ set(
     "./qs10a6.c"
     "./qs10a6m.c"
     "./qs9e17.c"
+    "./qs226ms2.c"
     "./die.c"
 )
 
