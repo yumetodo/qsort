@@ -1,13 +1,13 @@
+#include "qs226ms2.h"
 #include <stdio.h>
-static void die(char *s) {fprintf(stderr, "++++ %s ++++\n", s); printf("++++ %s ++++ \n", s); exit(1);}
+#include "die.h"
+#include "global_variable.h"
 
 #ifdef DEBUG
-unsigned int ass_cnt; /*代入回数を計測しないときは、削除可能*/
-#define pppppp(x,c) {/*printf(x); fflush(stdout);*/  ass_cnt += (c);}
+# define pppppp(x,c) {/*printf(x); fflush(stdout);*/  inc_ass_cnt(c);}
 #else
-#define pppppp(x,c)
+# define pppppp(x,c)
 #endif
-
 
 #include <alloca.h>
 #include <stdint.h>
@@ -15,7 +15,8 @@ unsigned int ass_cnt; /*代入回数を計測しないときは、削除可能*/
 #include <string.h>
 #include <unistd.h>
 //#include <memcpy.h>
-_PTR	 _EXFUN(mempcpy,(_PTR, const _PTR, size_t));
+//_PTR	 _EXFUN(mempcpy,(_PTR, const _PTR, size_t));
+void * __mempcpy(void* dstpp, const void* srcpp, size_t len);
 typedef int (*__compar_d_fn_t) (const void *, const void *, void *);
 
 struct msort_param
@@ -159,7 +160,7 @@ msort_with_tmp (const struct msort_param *p, void *b, size_t n)
 }
 
 
-void
+static void
 __qsort_r (void *b, size_t n, size_t s, __compar_d_fn_t cmp, void *arg)
 {
   size_t size = n * s;
@@ -249,9 +250,8 @@ __qsort_r (void *b, size_t n, size_t s, __compar_d_fn_t cmp, void *arg)
   free (tmp);
 }
 
-
 void
-qsort (void *b, size_t n, size_t s, __compar_fn_t cmp)
+qsort226ms2 (void *b, size_t n, size_t s, __compar_fn_t cmp)
 {
   return __qsort_r (b, n, s, (__compar_d_fn_t) cmp, NULL);
 }
