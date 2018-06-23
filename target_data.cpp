@@ -112,7 +112,7 @@ std::string not_sorted_exception::format(const target_data & data, size_t not_so
 	auto index = std::accumulate(
 		index_elem_str_src.begin(), index_elem_str_src.end(),
 		[] {string s; s.reserve(limit_output_width * 3 + 20); return s; }(),
-		[not_sorted_pos](string s, const s_pair& i_e) {
+		[](string s, const s_pair& i_e) {
 		if (!s.empty()) s += ' ';
 		if (i_e.first.size() < i_e.second.size()) s += string(i_e.second.size() - i_e.first.size(), ' ');
 		s += i_e.first;
