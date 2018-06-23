@@ -22,7 +22,7 @@
 #include "die.h"
 #include <stdbool.h>
 
-#define QSORT_MM8_EXPORT static inline
+#define QSORT_MM88_EXPORT static inline
 
 static size_t mmkind, mmsize, high, low, high32_4;
 static bool mmquick;
@@ -60,7 +60,7 @@ static bool mmquick;
 
 #define INT64_OK  (sizeof(char*)==8)
 
-QSORT_MM8_EXPORT void mmswapblock( char *a, char *b, size_t size )
+QSORT_MM88_EXPORT void mmswapblock( char *a, char *b, size_t size )
 {
 #ifdef DEBUG
  inc_ass_cnt((size/mmsize)*2);
@@ -70,7 +70,7 @@ QSORT_MM8_EXPORT void mmswapblock( char *a, char *b, size_t size )
  else   /*mmkind == 1*/            HIGHLOW((size&( -8)),(size&( 8-1)),SW1,1,(void)a)
 }
 
-QSORT_MM8_EXPORT void mmrot3( char *a, char *b, char *c )
+QSORT_MM88_EXPORT void mmrot3( char *a, char *b, char *c )
 {
 #ifdef DEBUG
  inc_ass_cnt(3);
@@ -82,7 +82,7 @@ QSORT_MM8_EXPORT void mmrot3( char *a, char *b, char *c )
 
 static void (*mmswapi)(char *, char *);
 
-QSORT_MM8_EXPORT void mmswap(char *a, char *b) {
+QSORT_MM88_EXPORT void mmswap(char *a, char *b) {
 #ifdef DEBUG
  inc_ass_cnt(2);
 #endif
@@ -179,7 +179,7 @@ static inline void mmswap4L28(char *a, char *b) MMswapL(SW8(0) SW8(1) SW8(2) SW4
 //以下、「ポインタが８バイト(sizeof(char*)==8)なら、機械語の８バイト整数あり」と仮定している。
 //「ポインタが４バイトなのに、機械語の８バイト整数あり」では、十分な性能はでない。
 
-QSORT_MM8_EXPORT void mmprepare( void *base, size_t size )
+QSORT_MM88_EXPORT void mmprepare( void *base, size_t size )
 {
 #ifdef DEBUG
 #if defined(_MSC_VER) && !defined(__c2__)
@@ -283,7 +283,7 @@ QSORT_MM8_EXPORT void mmprepare( void *base, size_t size )
 #define  MV8(i) {A8[i] = B8[i];}
 #define  MV4(i) {A4[i] = B4[i];}
 #define  MV1(i) { a[i] =  b[i];}
-QSORT_MM8_EXPORT void mmmove(char *a, const char *b)
+QSORT_MM88_EXPORT void mmmove(char *a, const char *b)
 {
 #ifdef DEBUG
 	ass_cnt += 1;
